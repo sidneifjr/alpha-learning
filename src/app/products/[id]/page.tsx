@@ -10,6 +10,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel'
+import { convertToCurrency } from '@/utils/convertToCurrency'
 
 type PageProps = {
   params: {
@@ -42,10 +43,7 @@ export default async function Products({ params }: PageProps) {
     `${process.env.NEXT_API_BASE_URL}/products/${params.id}`
   ).then((response) => response.json())) as ProductProps
 
-  const productPrice = new Intl.NumberFormat('pt-br', {
-    style: 'currency',
-    currency: 'BRL',
-  }).format(getProduct.price)
+  const productPrice = convertToCurrency(getProduct.price)
 
   return (
     <section className="pt-16">
@@ -55,23 +53,24 @@ export default async function Products({ params }: PageProps) {
             <CarouselContent className="h-[600px]">
               {getProduct.images.map((image) => {
                 return (
-                  <CarouselItem key={crypto.randomUUID()} className="h-full">
+                  <CarouselItem
+                    key={crypto.randomUUID()}
+                    className="h-full bg-slate-400 p-6"
+                  >
                     <Image
                       alt={getProduct.title}
                       width={660}
                       height={660}
                       src={image}
-                      className="object-cover"
+                      className="h-96 object-cover object-right"
                     />
                   </CarouselItem>
                 )
               })}
             </CarouselContent>
 
-            <div className="relative flex">
-              <CarouselPrevious className="left-0 top-0" />
-              <CarouselNext className="bottom-0 right-0" />
-            </div>
+            <CarouselPrevious />
+            <CarouselNext />
           </Carousel>
         </div>
 
@@ -84,7 +83,9 @@ export default async function Products({ params }: PageProps) {
             {getProduct.title}
           </h2>
 
-          <Badge className="tracking-tight">{getProduct.category}</Badge>
+          <Badge className="max-w-24 tracking-tight">
+            {getProduct.category}
+          </Badge>
 
           <p className="my-8 flex-1">{getProduct.description}</p>
 
