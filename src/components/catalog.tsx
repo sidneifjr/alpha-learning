@@ -34,25 +34,38 @@ export async function Catalog() {
 
   return (
     <div className="p-6">
-      <h2 className="py-8 text-2xl font-bold tracking-tight">Catálogo</h2>
+      <h2 className="py-6 text-2xl font-bold tracking-tight">Catálogo</h2>
 
       <div className="grid grid-cols-4 gap-4">
         {products.map((product: ProductProps) => {
+          const productPrice = new Intl.NumberFormat('pt-br', {
+            style: 'currency',
+            currency: 'BRL',
+          }).format(product.price)
+
+          const priceAfterDiscount =
+            product.price - product.price * (product.discountPercentage / 100)
+
           return (
-            <Link key={product.id} href="/" className="h-full">
-              <Card>
+            <Link
+              key={product.id}
+              href={`/products/${product.id}`}
+              className="h-full"
+            >
+              <Card className="flex h-full flex-col">
                 <CardHeader className="flex border-b pb-4">
                   <Image
                     src={product.thumbnail}
                     alt={product.title}
                     width={500}
-                    height={333}
+                    height={300}
                     quality={100}
+                    className="h-52 object-cover object-top"
                   />
 
-                  <CardTitle className="flex justify-between pt-2 tracking-tight">
-                    <div>
-                      <span>
+                  <div className="flex pt-2">
+                    <CardTitle className="flex flex-col tracking-tight">
+                      <span className="tracking-tight">
                         {product.title}, {product.brand}
                       </span>
 
@@ -60,28 +73,24 @@ export async function Catalog() {
                         <Star height={16} width={16} />
                         {product.rating}
                       </span>
+                    </CardTitle>
 
-                      {/* <span className="inline-flex cursor-pointer items-center gap-2 whitespace-nowrap rounded-full border border-gray-600 px-3 py-1 text-[10px] font-medium uppercase tracking-wide text-gray-200 transition hover:border-gray-500">
-                        {product.category}
-                      </span> */}
-                    </div>
+                    <div className="relative flex flex-1 flex-col items-end">
+                      <span className="tracking-tight text-gray-500 line-through">
+                        {productPrice}
+                      </span>
 
-                    <div className="flex flex-col items-end">
-                      <span>
+                      <span className="tracking-tight text-green-400">
                         {new Intl.NumberFormat('pt-br', {
                           style: 'currency',
                           currency: 'BRL',
-                        }).format(product.price)}
+                        }).format(priceAfterDiscount)}
                       </span>
-
-                      {/* <span className="!mt-1">
-                        {product.discountPercentage}%
-                      </span> */}
                     </div>
-                  </CardTitle>
+                  </div>
                 </CardHeader>
 
-                <CardContent className="py-6">
+                <CardContent className="flex-1 py-6">
                   <CardDescription>{product.description}</CardDescription>
                 </CardContent>
 
