@@ -10,6 +10,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel'
+import { env } from '@/env'
 import { convertToCurrency } from '@/utils/convertToCurrency'
 
 type PageProps = {
@@ -40,41 +41,38 @@ export async function generateMetadata({ params }: PageProps) {
 
 export default async function Products({ params }: PageProps) {
   const getProduct = (await fetch(
-    `${process.env.NEXT_API_BASE_URL}/products/${params.id}`
+    `${env.NEXT_API_BASE_URL}/products/${params.id}`
   ).then((response) => response.json())) as ProductProps
 
   const productPrice = convertToCurrency(getProduct.price)
 
   return (
     <section className="pt-16">
-      <div className="mx-auto flex max-w-[1400px] justify-center">
-        <div className="h-[600px] w-[600px]">
+      <div className="mx-auto flex max-w-[1400px] justify-between">
+        <div className="h-[600px] w-[600px] rounded border">
           <Carousel className="h-[600px]">
             <CarouselContent className="h-[600px]">
               {getProduct.images.map((image) => {
                 return (
-                  <CarouselItem
-                    key={crypto.randomUUID()}
-                    className="h-full bg-slate-400 p-6"
-                  >
+                  <CarouselItem key={crypto.randomUUID()} className="h-full">
                     <Image
                       alt={getProduct.title}
                       width={660}
                       height={660}
                       src={image}
-                      className="h-96 object-cover object-right"
+                      className="h-[600px] object-contain"
                     />
                   </CarouselItem>
                 )
               })}
             </CarouselContent>
 
-            <CarouselPrevious />
-            <CarouselNext />
+            <CarouselPrevious className="left-0 top-[105%]" />
+            <CarouselNext className="right-0 top-[105%]" />
           </Carousel>
         </div>
 
-        <div className="flex flex-col pl-6">
+        <div className="flex flex-1 flex-col pl-6">
           <span className="tracking-tight text-gray-400">
             {getProduct.brand}
           </span>

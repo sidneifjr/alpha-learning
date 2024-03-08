@@ -21,16 +21,16 @@ export async function Catalog() {
   const { products, limit, total } = request
 
   return (
-    <div className="p-6">
+    <div className="mx-auto max-w-[1400px] py-6">
       <h2 className="py-6 text-2xl font-bold tracking-tight">Catálogo</h2>
 
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-3 gap-4">
         {products.map((product: ProductProps) => {
           return <Product key={product.id} content={product} />
         })}
       </div>
 
-      <div className="p-6 text-right">
+      <div className="pt-6 text-right">
         <p>
           Exibindo {limit} de {total} itens
         </p>
